@@ -91,7 +91,7 @@ function App() {
         >
           I'm Aum - I'm a fullstack developer, game designer, film cinematographer, photography, music producer and foreign people in the bay area.
           I'm interested in development, moderation, and building thriving online communities.
-          I work on random projects in my free time, a lot involving Game Development!
+          I work on random projects in my free time, a lot involving game development!
         </motion.p>
 
         <motion.div
