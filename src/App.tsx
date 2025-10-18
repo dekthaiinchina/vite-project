@@ -1,9 +1,9 @@
-import { FlaskConical, Sparkles, Rocket } from 'lucide-react';
+import { FlaskConical, Sparkles, Rocket, Music2, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 
 function App() {
-  // ⭐ Generate consistent stars only once
+  // 🌟 Stars
   const stars = useMemo(
     () =>
       Array.from({ length: 40 }, (_, i) => ({
@@ -16,6 +16,84 @@ function App() {
     []
   );
 
+  // 🎵 Music setup
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0);
+  const [hasInteracted, setHasInteracted] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio('/audio/bgm.mp3');
+    audio.loop = true;
+    audio.volume = 0; // start silent
+    audioRef.current = audio;
+
+    // Try autoplay silently
+    audio.play().catch(() => {
+      // ignored until user interacts
+    });
+
+    // 🖱️ On first user interaction — fade in music
+    const handleFirstInteraction = async () => {
+      if (!audioRef.current || hasInteracted) return;
+      try {
+        await audioRef.current.play();
+        fadeVolume(0.3, 1500);
+        setIsPlaying(true);
+        setHasInteracted(true);
+        localStorage.setItem('musicPlaying', 'true');
+      } catch (err) {
+        console.warn('Autoplay blocked until user interacts.');
+      }
+    };
+
+    window.addEventListener('click', handleFirstInteraction, { once: true });
+    return () => window.removeEventListener('click', handleFirstInteraction);
+  }, [hasInteracted]);
+
+  // 🎚️ Fade logic
+  const fadeVolume = (target: number, duration = 1000) => {
+    if (!audioRef.current) return;
+    const steps = 20;
+    const stepTime = duration / steps;
+    const diff = (target - volume) / steps;
+
+    let current = volume;
+    const fade = setInterval(() => {
+      current += diff;
+      if (!audioRef.current) {
+        clearInterval(fade);
+        return;
+      }
+      audioRef.current.volume = Math.max(0, Math.min(1, current));
+      setVolume(audioRef.current.volume);
+
+      if ((diff > 0 && current >= target) || (diff < 0 && current <= target)) {
+        clearInterval(fade);
+      }
+    }, stepTime);
+  };
+
+  // 🎵 Manual toggle (optional)
+  const toggleMusic = async () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      fadeVolume(0, 800);
+      setTimeout(() => audioRef.current?.pause(), 800);
+      setIsPlaying(false);
+      localStorage.setItem('musicPlaying', 'false');
+    } else {
+      try {
+        await audioRef.current.play();
+        fadeVolume(0.3, 800);
+        setIsPlaying(true);
+        localStorage.setItem('musicPlaying', 'true');
+      } catch {
+        console.warn('Autoplay blocked — needs user gesture');
+      }
+    }
+  };
+
   // ✨ Animation preset
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -23,8 +101,8 @@ function App() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center px-4 sm:px-6 transition-colors duration-500">
-      {/* 🌌 Twinkling Stars Background */}
+    <div className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center px-4 sm:px-6 transition-colors duration-500 select-none">
+      {/* 🌌 Stars */}
       <div className="absolute inset-0 overflow-hidden">
         {stars.map((star) => (
           <motion.div
@@ -47,7 +125,26 @@ function App() {
         ))}
       </div>
 
-      {/* 🚀 Main Content */}
+      {/* 🎚️ Music Toggle */}
+      <motion.button
+        onClick={toggleMusic}
+        className="absolute top-5 right-5 z-50 bg-white/80 dark:bg-gray-800/80 p-3 rounded-full shadow-md hover:scale-110 transition-transform"
+        whileTap={{ scale: 0.9 }}
+        title={isPlaying ? 'Pause Music' : 'Play Music'}
+      >
+        {isPlaying ? (
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <Music2 className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+          </motion.div>
+        ) : (
+          <VolumeX className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        )}
+      </motion.button>
+
+      {/* 🚀 Main Section */}
       <motion.section
         className="relative z-10 max-w-4xl text-center py-16 sm:py-20"
         initial="hidden"
@@ -89,9 +186,9 @@ function App() {
           viewport={{ once: true }}
           className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 px-4"
         >
-          I'm Aum - I'm a fullstack developer, game designer, film cinematographer, photography, music producer and foreign people in the bay area.
-          I'm interested in development, moderation, and building thriving online communities.
-          I work on random projects in my free time, a lot involving game development!
+          I'm Aum — a fullstack developer, game designer, cinematographer,
+          photographer, and music producer based in the Bay Area. I love building
+          creative communities and working on unique game projects.
         </motion.p>
 
         <motion.div
@@ -104,23 +201,16 @@ function App() {
             href="https://github.com/dekthaiinchina"
             target="_blank"
             rel="noopener noreferrer"
-            title="Go to our GitHub"
           >
-            <button
-              aria-label="Go to our GitHub"
-              className="w-full sm:w-auto bg-blue-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-base sm:text-lg hover:bg-blue-700 transition transform hover:scale-105 shadow-md hover:shadow-lg"
-            >
+            <button className="w-full sm:w-auto bg-blue-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-base sm:text-lg hover:bg-blue-700 transition transform hover:scale-105 shadow-md hover:shadow-lg">
               <span className="inline-flex items-center gap-2">
                 <FlaskConical className="w-5 h-5" /> GitHub
               </span>
             </button>
           </a>
 
-          <a href="mailto:contactme@dekthaiinchina.com" title="Email us">
-            <button
-              aria-label="Email us"
-              className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-base sm:text-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition transform hover:scale-105 shadow-md hover:shadow-lg"
-            >
+          <a href="mailto:contactme@dekthaiinchina.com">
+            <button className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-base sm:text-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition transform hover:scale-105 shadow-md hover:shadow-lg">
               <span className="inline-flex items-center gap-2">
                 <Sparkles className="w-5 h-5" /> Contact us
               </span>
