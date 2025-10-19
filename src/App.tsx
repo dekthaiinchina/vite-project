@@ -25,15 +25,11 @@ function App() {
   useEffect(() => {
     const audio = new Audio('/audio/bgm.mp3');
     audio.loop = true;
-    audio.volume = 0; // start silent
+    audio.volume = 0;
     audioRef.current = audio;
 
-    // Try autoplay silently
-    audio.play().catch(() => {
-      // ignored until user interacts
-    });
+    audio.play().catch(() => {});
 
-    // 🖱️ On first user interaction — fade in music
     const handleFirstInteraction = async () => {
       if (!audioRef.current || hasInteracted) return;
       try {
@@ -51,7 +47,6 @@ function App() {
     return () => window.removeEventListener('click', handleFirstInteraction);
   }, [hasInteracted]);
 
-  // 🎚️ Fade logic
   const fadeVolume = (target: number, duration = 1000) => {
     if (!audioRef.current) return;
     const steps = 20;
@@ -74,7 +69,6 @@ function App() {
     }, stepTime);
   };
 
-  // 🎵 Manual toggle (optional)
   const toggleMusic = async () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -94,20 +88,31 @@ function App() {
     }
   };
 
-  // ✨ Animation preset
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center px-4 sm:px-6 transition-colors duration-500 select-none">
-      {/* 🌌 Stars */}
-      <div className="absolute inset-0 overflow-hidden">
+    <div className="relative overflow-hidden min-h-screen flex items-center justify-center px-4 sm:px-6 transition-colors duration-500 select-none">
+
+      {/* 🎥 Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="/video/bg.mp4" type="video/mp4" />
+      </video>
+
+      {/* 🌌 Stars Overlay */}
+      <div className="absolute inset-0 overflow-hidden z-10 pointer-events-none">
         {stars.map((star) => (
           <motion.div
             key={star.id}
-            className="absolute bg-white dark:bg-blue-300 rounded-full opacity-80"
+            className="absolute bg-white/80 dark:bg-blue-300 rounded-full opacity-80 blur-[1px]"
             style={{
               left: `${star.x}%`,
               top: `${star.y}%`,
@@ -124,6 +129,9 @@ function App() {
           />
         ))}
       </div>
+
+      {/* Dark overlay for contrast */}
+      <div className="absolute inset-0 bg-black/30 dark:bg-black/50 z-20"></div>
 
       {/* 🎚️ Music Toggle */}
       <motion.button
@@ -146,7 +154,7 @@ function App() {
 
       {/* 🚀 Main Section */}
       <motion.section
-        className="relative z-10 max-w-4xl text-center py-16 sm:py-20"
+        className="relative z-30 max-w-4xl text-center py-16 sm:py-20"
         initial="hidden"
         whileInView="visible"
         transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -167,7 +175,7 @@ function App() {
               ease: [0.68, -0.55, 0.27, 1.55],
             }}
           >
-            <Rocket className="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 dark:text-blue-400 transition-transform hover:scale-110" />
+            <Rocket className="w-10 h-10 sm:w-12 sm:h-12 text-blue-400 dark:text-blue-300 transition-transform hover:scale-110" />
           </motion.div>
         </motion.div>
 
@@ -175,7 +183,7 @@ function App() {
           variants={fadeUp}
           transition={{ duration: 0.7, delay: 0.3 }}
           viewport={{ once: true }}
-          className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-800 dark:text-white mb-4 sm:mb-6 px-2"
+          className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6 px-2 drop-shadow-lg"
         >
           Welcome to our website
         </motion.h1>
@@ -184,7 +192,7 @@ function App() {
           variants={fadeUp}
           transition={{ duration: 0.7, delay: 0.4 }}
           viewport={{ once: true }}
-          className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 px-4"
+          className="text-base sm:text-lg md:text-xl text-gray-100 mb-6 sm:mb-8 px-4 drop-shadow-md"
         >
           I'm Aum — a fullstack developer, game designer, cinematographer,
           photographer, and music producer based in the Bay Area. I love building
@@ -210,7 +218,7 @@ function App() {
           </a>
 
           <a href="mailto:contactme@dekthaiinchina.com">
-            <button className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-base sm:text-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition transform hover:scale-105 shadow-md hover:shadow-lg">
+            <button className="w-full sm:w-auto bg-gray-200/80 dark:bg-gray-700/80 text-gray-900 dark:text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-base sm:text-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition transform hover:scale-105 shadow-md hover:shadow-lg">
               <span className="inline-flex items-center gap-2">
                 <Sparkles className="w-5 h-5" /> Contact us
               </span>
