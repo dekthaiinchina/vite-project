@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light dark;
+
+  --color-background: #ffffff;
+  --color-surface: #f3f4f6;
+  --color-text: #111827;
+  --color-text-muted: #4b5563;
+  --color-border: #6b7280;
+  --color-link: #1d4ed8;
+  --color-link-hover: #1e40af;
+  --color-focus: #2563eb;
+
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #111827;
+    --color-surface: #1f2937;
+    --color-text: #f9fafb;
+    --color-text-muted: #d1d5db;
+    --color-border: #9ca3af;
+    --color-link: #93c5fd;
+    --color-link-hover: #bfdbfe;
+    --color-focus: #60a5fa;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+a {
+  color: var(--color-link);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
