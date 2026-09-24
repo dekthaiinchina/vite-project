@@ -31,4 +31,3 @@ locally for inspection.
 
 The Vite configuration uses the React plugin without the optional React Compiler;
 the current page has no state updates that would benefit from memoization.
-See [PERFORMANCE.md](PERFORMANCE.md) for the cleanup review and remaining work.
