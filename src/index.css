@@ -26,7 +26,6 @@
   --heading: #171513;
   --muted: #6b625c;
   --subtle: #756b64;
-  --hover-text: #443c36;
   --announcement-text: #443c36;
   --surface: #00000003;
   --border: #0000001a;
@@ -42,7 +41,6 @@
     --heading: #fff;
     --muted: #ffffff59;
     --subtle: #ffffff33;
-    --hover-text: #ffffffb3;
     --announcement-text: #ffffffcc;
     --surface: #ffffff08;
     --border: #ffffff12;
@@ -68,14 +66,9 @@ body {
   padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
-button,
 a {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-}
-
-button {
-  font: inherit;
 }
 
 ::selection {
@@ -88,80 +81,14 @@ button {
   outline-offset: 6px;
 }
 
-.splash {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
-  overflow-y: auto;
-  border: 0;
-  background: var(--background);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: opacity .6s ease, visibility .6s ease;
-}
-
-.splash.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.splash-logo {
-  font-size: clamp(1.25rem, .5rem + 4vw, 2.4rem);
-  max-width: 100%;
-  font-weight: 800;
-  color: var(--orange);
-  letter-spacing: -.5px;
-  margin-bottom: clamp(1rem, 5vh, 2rem);
-}
-
-.splash-logo>span,
 .logo>span {
   color: var(--heading);
-}
-
-.splash-cta {
-  font: .8rem var(--mono);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.splash:hover .splash-cta {
-  color: var(--hover-text);
-}
-
-@keyframes pulse {
-
-  0%,
-  100% {
-    opacity: .35;
-  }
-
-  50% {
-    opacity: .8;
-  }
 }
 
 .page {
   width: 100%;
   max-width: 40rem;
   margin: clamp(.5rem, 3vw, 2rem) auto;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity .8s ease .3s, transform .8s ease .3s;
-}
-
-.page.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .header {
@@ -179,10 +106,6 @@ button {
   color: var(--orange);
   letter-spacing: -.5px;
   line-height: 1.25;
-}
-
-.logo:focus {
-  outline: none;
 }
 
 .announcement {
@@ -253,14 +176,6 @@ button {
   margin-top: 2px;
 }
 
-.download-left {
-  display: flex;
-  flex-wrap: wrap;
-  min-width: 0;
-  gap: .5rem .75rem;
-  align-items: center;
-}
-
 .download-info {
   min-width: 0;
 }
@@ -322,7 +237,6 @@ footer {
 
 @media (max-height: 28rem) and (orientation: landscape) {
   .page { margin-block: .5rem; }
-  .splash-logo { margin-bottom: 1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -332,9 +246,5 @@ footer {
   *::after {
     animation: none !important;
     transition: none !important;
-  }
-
-  .splash-cta {
-    opacity: .8;
   }
 }

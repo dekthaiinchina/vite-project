@@ -1,10 +1,8 @@
-import './index.css'
-
 function Wordmark() { return <>page<span>.dekthaiinchina</span></> }
 
 function App() {
   return (
-    <main className="page visible">
+    <main className="page">
       <header className="header">
         <h1 className="logo"><Wordmark /></h1>
       </header>
@@ -21,9 +19,7 @@ function App() {
             <a href="https://github.com/dekthaiinchina" aria-label="GitHub repository">GO <span aria-hidden="true">→</span></a>
           </article>
           <article className="download-card">
-            <div className="download-left">
-              <div className="download-info"><h3>Contact</h3><p>Send me an email directly</p></div>
-            </div>
+            <div className="download-info"><h3>Contact</h3><p>Send me an email directly</p></div>
             <a href="mailto:contactme@dekthaiinchina.com" aria-label="Email directly">GO <span aria-hidden="true">→</span></a>
           </article>
         </div>
