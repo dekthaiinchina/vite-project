@@ -236,7 +236,9 @@ footer {
 }
 
 @media (max-height: 28rem) and (orientation: landscape) {
-  .page { margin-block: .5rem; }
+  .page {
+    margin-block: .5rem;
+  }
 }
 
 @keyframes page-enter {

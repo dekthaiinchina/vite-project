@@ -1,4 +1,4 @@
-function Wordmark() { return <>page<span>.dekthaiinchina</span></> }
+function Wordmark() { return <>dekthaiinchina<span>.com</span></> }
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <p>This website is currently under development. We sincerely apologize for any errors you may encounter.</p>
       </section>
       <section aria-labelledby="downloads-title">
-        <h2 className="downloads-label page-enter" id="downloads-title">Projects | Contact Channels</h2>
+        <h2 className="downloads-label page-enter" id="downloads-title">Projects | Contact</h2>
         <div className="downloads">
           <article className="download-card page-enter">
             <div className="download-info"><h3>GitHub</h3><p>visit my github repository</p></div>
